@@ -1,0 +1,262 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  /* Modern color scheme */
+  :root {
+    --primary: #0d6efd;
+    --primary-dark: #0a58ca;
+    --secondary: #fd7e14;
+    --light: #f8f9fa;
+    --dark: #212529;
+    --success: #198754;
+  }
+  
+  /* Hero section with overlay gradient */
+  .hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("{% static 'image/mechan.jpg' %}") no-repeat center center/cover;
+    color: white;
+    padding: 120px 20px;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 4rem;
+  }
+  
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .hero-title {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+  }
+  
+  .hero-subtitle {
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+    font-weight: 300;
+  }
+  
+  /* Button styling */
+  .btn-primary {
+    background: var(--primary);
+    border: none;
+    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  
+  .btn-outline-light {
+    border: 2px solid white;
+    color: white;
+    padding: 10px 28px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-outline-light:hover {
+    background: white;
+    color: var(--dark);
+    transform: translateY(-2px);
+  }
+  
+  /* Features section */
+  .section-title {
+    text-align: center;
+    margin-bottom: 3rem;
+    position: relative;
+    padding-bottom: 15px;
+  }
+  
+  .section-title:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+  
+  /* Card styling */
+  .feature-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    height: 100%;
+    text-align: center;
+    padding: 30px 20px;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  }
+  
+  .card-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(13, 110, 253, 0.1);
+    border-radius: 50%;
+    padding: 15px;
+  }
+  
+  .card-icon img {
+    width: 100%;
+    height: auto;
+  }
+  
+  .feature-card h3 {
+    font-weight: 700;
+    margin-bottom: 15px;
+    color: var(--dark);
+  }
+  
+  .feature-card p {
+    color: #6c757d;
+    line-height: 1.6;
+  }
+  
+  /* Stats section */
+  .stats-section {
+    background: var(--primary);
+    color: white;
+    padding: 80px 0;
+    border-radius: 12px;
+    margin: 5rem 0;
+  }
+  
+  .stat-item {
+    text-align: center;
+  }
+  
+  .stat-number {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+  
+  .stat-label {
+    font-size: 1.2rem;
+    opacity: 0.9;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .hero-title {
+      font-size: 2.5rem;
+    }
+    
+    .hero-subtitle {
+      font-size: 1.2rem;
+    }
+    
+    .stat-number {
+      font-size: 2.2rem;
+    }
+  }
+</style>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1 class="hero-title">RoadMech — Onroad Breakdown Assistance</h1>
+    <p class="hero-subtitle">Fast, reliable roadside help — towing, fuel, battery, tire support. Available 24/7 with Cash on Delivery.</p>
+    <div class="d-flex gap-3 justify-content-center flex-wrap">
+      {% if user.is_authenticated %}
+        <a class="btn btn-primary btn-lg" href="{% url 'choose_vehicle' %}">Request Service Now</a>
+      {% else %}
+        <a class="btn btn-primary btn-lg" href="{% url 'login' %}">Login to Get Started</a>
+        <a class="btn btn-outline-light btn-lg" href="{% url 'register' %}">Create Account</a>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<div class="container my-5">
+  <h2 class="section-title">Why Choose RoadMech?</h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="card-icon">
+          <img src="{% static 'images/quick.png' %}" alt="Quick Service Icon">
+        </div>
+        <h3>Quick Requests</h3>
+        <p>Request help in under a minute — choose vehicle, select service, and share your location for immediate assistance.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="card-icon">
+          <img src="{% static 'images/mechanic.png' %}" alt="Verified Mechanics Icon">
+        </div>
+        <h3>Verified Mechanics</h3>
+        <p>Our mechanics are thoroughly vetted professionals who register their service centers and accept nearby jobs.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="feature-card">
+        <div class="card-icon">
+          <img src="{% static 'images/cod.png' %}" alt="Cash on Delivery Icon">
+        </div>
+        <h3>Cash on Delivery</h3>
+        <p>Pay the mechanic directly at the time of service. No upfront payments or hidden fees.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="stats-section">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3 col-6 mb-4 mb-md-0">
+        <div class="stat-item">
+          <div class="stat-number" data-count="5000">5000+</div>
+          <div class="stat-label">Services Rendered</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6 mb-4 mb-md-0">
+        <div class="stat-item">
+          <div class="stat-number" data-count="250">250+</div>
+          <div class="stat-label">Verified Mechanics</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <div class="stat-number" data-count="24">24/7</div>
+          <div class="stat-label">Availability</div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="stat-item">
+          <div class="stat-number" data-count="98">98%</div>
+          <div class="stat-label">Satisfaction Rate</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
