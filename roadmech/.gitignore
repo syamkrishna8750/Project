@@ -1,0 +1,25 @@
+@"
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Django stuff
+*.log
+*.pot
+*.pyc
+*.sqlite3
+
+# Ignore db
+db.sqlite3
+
+# Environment
+venv/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+"@ | Out-File -Encoding UTF8 .gitignore

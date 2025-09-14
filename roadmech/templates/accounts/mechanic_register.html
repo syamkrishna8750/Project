@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Full page background */
+  body {
+    background: url('/static/image/mech2.jpg') no-repeat center center/cover;
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Center the form */
+  .form-container {
+    flex: 1; /* take remaining height after navbar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Glassmorphism card */
+  .card {
+    border-radius: 18px;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    max-width: 500px;
+    width: 100%;
+    color: #fff;
+  }
+
+  .card-title {
+    font-weight: 700;
+    font-size: 1.6rem;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  /* Labels */
+  form label {
+    font-weight: 600;
+    color: #e5e7eb;
+    margin-bottom: 6px;
+  }
+
+  /* Inputs */
+  form input, 
+  form select, 
+  form textarea {
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 12px;
+    width: 100%;
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    margin-bottom: 15px;
+  }
+
+  form input:focus {
+    border-color: #16a34a;
+    background: rgba(255,255,255,0.25);
+    box-shadow: 0 0 8px rgba(22, 163, 74, 0.4);
+    outline: none;
+  }
+
+  /* Placeholder text */
+  form input::placeholder {
+    color: #d1d5db;
+  }
+
+  /* Button */
+  .btn-success {
+    border-radius: 12px;
+    font-weight: 700;
+    padding: 12px;
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    border: none;
+    transition: 0.3s;
+  }
+
+  .btn-success:hover {
+    background: linear-gradient(135deg, #15803d, #14532d);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+  }
+
+  
+  .helptext {
+    display: none !important;
+  }
+
+
+</style>
+
+<div class="form-container">
+  <div class="card">
+    <h4 class="card-title">Mechanic / Service Center Registration</h4>
+    <form method="post">{% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-success w-100" type="submit">Register as Mechanic</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

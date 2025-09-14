@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style>
+  /* Full page background */
+ body {
+  background: url('/static/image/solid.jpg') no-repeat center center fixed;
+  background-size: cover;   /* Makes the image cover the full screen */
+  min-height: 100vh;
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+}
+
+  /* Success wrapper to center card */
+  .success-wrapper {
+    min-height: calc(100vh - 70px); /* subtract navbar height */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+
+  /* Success Card */
+  .success-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: #fff;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    animation: fadeIn 1s ease-in-out;
+  }
+
+  .success-card h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+
+  .success-card p {
+    font-size: 1.1rem;
+    margin-bottom: 25px;
+    color: #e0f2fe;
+  }
+
+  /* Button */
+  .btn-primary {
+    background: linear-gradient(135deg, #4facfe, #0066ff);
+    border: none;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  }
+
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #0066ff, #0047b3);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  /* Fade animation */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<div class="success-wrapper">
+  <div class="success-card">
+    <h2>✅ Request Submitted Successfully!</h2>
+    <p>Your request has been sent to a mechanic. They will contact you shortly.</p>
+    <a href="{% url 'choose_vehicle' %}" class="btn btn-primary">Request Another Service</a>
+  </div>
+</div>
+{% endblock %}

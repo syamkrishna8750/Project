@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .dashboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .dashboard-header {
+    background: linear-gradient(135deg, #2c3e50 0%, #4a6491 100%);
+    color: white;
+    padding: 25px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .dashboard-header h2 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 28px;
+  }
+  
+  .dashboard-header p {
+    margin: 5px 0 0;
+    opacity: 0.9;
+  }
+  
+  .section-title {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+  }
+  
+  .section-title:after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 3px;
+    width: 50px;
+    background: #3498db;
+    border-radius: 3px;
+  }
+  
+  .request-card {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 15px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid #3498db;
+  }
+  
+  .request-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  }
+  
+  .request-card.pending {
+    border-left-color: #e74c3c;
+  }
+  
+  .request-card.accepted {
+    border-left-color: #2ecc71;
+  }
+  
+  .service-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 8px;
+  }
+  
+  .service-emergency {
+    background: #ff7979;
+    color: white;
+  }
+  
+  .service-maintenance {
+    background: #7ed6df;
+    color: white;
+  }
+  
+  .service-repair {
+    background: #f6e58d;
+    color: #333;
+  }
+  
+  .vehicle-info {
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+  }
+  
+  .vehicle-icon {
+    font-size: 20px;
+    margin-right: 10px;
+    color: #7f8c8d;
+  }
+  
+  .user-info {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #f1f1f1;
+  }
+  
+  .user-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #3498db;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-weight: bold;
+  }
+  
+  .btn-accept {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-accept:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  
+  .status-pending {
+    background: #ffeaa7;
+    color: #d35400;
+  }
+  
+  .status-progress {
+    background: #81ecec;
+    color: #00cec9;
+  }
+  
+  .status-completed {
+    background: #55efc4;
+    color: #00b894;
+  }
+  
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    color: #7f8c8d;
+  }
+  
+  .empty-state i {
+    font-size: 50px;
+    margin-bottom: 15px;
+    opacity: 0.5;
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-header {
+      padding: 15px;
+    }
+    
+    .request-card {
+      padding: 15px;
+    }
+  }
+</style>
+
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <h2>Mechanic Dashboard</h2>
+    <p>Manage your service requests and accepted jobs</p>
+  </div>
+  
+  <div class="pending-section">
+    <h4 class="section-title">Pending Requests</h4>
+    {% if pending_requests %}
+      <div class="request-list">
+        {% for r in pending_requests %}
+          <div class="request-card pending">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="flex-grow-1">
+                <span class="service-badge service-{{ r.service_type|lower }}">{{ r.get_service_type_display }}</span>
+                <span class="service-badge">{{ r.get_vehicle_type_display }}</span>
+                
+                <h6 class="mt-2">{{ r.vehicle_details }}</h6>
+                
+                <div class="vehicle-info">
+                  <span class="vehicle-icon">📍</span>
+                  <span>{{ r.location }}</span>
+                </div>
+                
+                <div class="user-info">
+                  <div class="user-avatar">{{ r.user.username|first|upper }}</div>
+                  <small>{{ r.user.username }}</small>
+                </div>
+              </div>
+              
+              <div class="text-end ms-3">
+                <form method="post" action="{% url 'accept_request' r.pk %}">{% csrf_token %}
+                  <button class="btn-accept">Accept Request</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i>🔧</i>
+        <p>No pending requests currently.</p>
+        <small>New requests will appear here as they come in.</small>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="accepted-section mt-5">
+    <h4 class="section-title">My Accepted Jobs</h4>
+    {% if my_accepted %}
+      <div class="request-list">
+        {% for r in my_accepted %}
+          <div class="request-card accepted">
+            <span class="service-badge service-{{ r.service_type|lower }}">{{ r.get_service_type_display }}</span>
+            <span class="service-badge">{{ r.get_vehicle_type_display }}</span>
+            
+            <h6 class="mt-2">{{ r.vehicle_details }}</h6>
+            
+            <div class="vehicle-info">
+              <span class="vehicle-icon">📍</span>
+              <span>{{ r.location }}</span>
+            </div>
+            
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="user-info" style="border-top: none; padding-top: 0;">
+                <div class="user-avatar">{{ r.user.username|first|upper }}</div>
+                <small>{{ r.user.username }}</small>
+              </div>
+              
+              <span class="status-badge status-{{ r.status|lower }}">{{ r.status }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="empty-state">
+        <i>🛠️</i>
+        <p>You haven't accepted any jobs yet.</p>
+        <small>Accepted jobs will appear here for tracking.</small>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

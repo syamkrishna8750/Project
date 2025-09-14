@@ -1,0 +1,220 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+  .service-request-container {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Header */
+  .request-header {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 35px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .request-header h2 {
+    margin: 0;
+    font-weight: 700;
+    font-size: 30px;
+  }
+
+  .request-header p {
+    margin-top: 8px;
+    font-size: 15px;
+    opacity: 0.9;
+  }
+
+  .vehicle-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 6px 16px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 20px;
+    font-size: 14px;
+  }
+
+  /* Form container */
+  .form-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 35px;
+    box-shadow: 0 6px 25px rgba(0,0,0,0.1);
+    animation: fadeIn 0.6s ease-in-out;
+  }
+
+  /* Section titles */
+  .form-section-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    border-left: 4px solid #3498db;
+    padding-left: 12px;
+  }
+
+  /* Form groups */
+  .form-group {
+    margin-bottom: 22px;
+    animation: fadeInUp 0.5s ease;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+
+  .form-control, select, textarea, input[type="text"], input[type="tel"] {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #dcdcdc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background-color: #fafafa;
+  }
+
+  .form-control:focus, 
+  select:focus, 
+  textarea:focus, 
+  input[type="text"]:focus,
+  input[type="tel"]:focus {
+    border-color: #3498db;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(52,152,219,0.2);
+    outline: none;
+  }
+
+  textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  /* Payment info */
+  .payment-info {
+    background: #f9fafc;
+    border: 1px solid #e0e6ed;
+    border-left: 4px solid #3498db;
+    padding: 18px;
+    border-radius: 8px;
+    margin: 30px 0;
+  }
+
+  .payment-display {
+    background: white;
+    padding: 12px 16px;
+    border: 1px solid #dcdcdc;
+    border-radius: 6px;
+    font-weight: 600;
+    margin-bottom: 6px;
+  }
+
+  /* Button */
+  .btn-submit {
+    background: linear-gradient(135deg, #3498db 0%, #2c3e50 100%);
+    color: white;
+    border: none;
+    padding: 14px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-block;
+  }
+
+  .btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  }
+
+  /* Error styling */
+  .errorlist {
+    color: #e74c3c;
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0;
+    font-size: 14px;
+  }
+
+  /* Animations */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .service-request-container {
+      padding: 15px;
+    }
+    .form-container {
+      padding: 20px;
+    }
+  }
+</style>
+
+<div class="service-request-container">
+  <div class="request-header">
+    <h2>Request Service</h2>
+    <p>Fill out the form below to request vehicle service</p>
+    <div class="vehicle-badge">
+      Vehicle Type: {{ vehicle_type|title }}
+    </div>
+  </div>
+  
+  <div class="form-container">
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="vehicle_type" value="{{ vehicle_type }}">
+      
+      <div class="form-section">
+        <h3 class="form-section-title">Service Details</h3>
+
+        {% for field in form %}
+          <div class="form-group">
+            <label class="form-label" for="{{ field.id_for_label }}">
+              {{ field.label }}
+            </label>
+            {{ field }}
+            {% if field.errors %}
+              {{ field.errors }}
+            {% endif %}
+            {% if field.help_text %}
+              <small class="form-text text-muted">{{ field.help_text }}</small>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+      
+      <div class="payment-info">
+        <label class="form-label">Payment Method</label>
+        <div class="payment-display">
+          Cash on Delivery (pay mechanic directly)
+        </div>
+        <small class="text-muted">
+          Note: Payment is made directly to the mechanic after service completion
+        </small>
+      </div>
+      
+      <button type="submit" class="btn-submit">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
