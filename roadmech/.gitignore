@@ -23,3 +23,9 @@ venv/
 .idea/
 *.swp
 "@ | Out-File -Encoding UTF8 .gitignore
+
+# Ignore Python cache and db
+__pycache__/
+*.pyc
+db.sqlite3
+venv/

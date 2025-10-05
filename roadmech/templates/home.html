@@ -12,67 +12,121 @@
     --success: #198754;
   }
   
-  /* Hero section with overlay gradient */
-  .hero {
-    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url("{% static 'image/mechan.jpg' %}") no-repeat center center/cover;
+  /* Full-screen hero section */
+  .hero-section {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.7)), url("{% static 'image/mechan.jpg' %}") no-repeat center center/cover;
     color: white;
-    padding: 120px 20px;
-    border-radius: 12px;
+    display: flex;
+    align-items: center;
     position: relative;
     overflow: hidden;
-    margin-bottom: 4rem;
   }
   
   .hero-content {
     position: relative;
     z-index: 2;
     max-width: 800px;
-    margin: 0 auto;
-    text-align: center;
+    margin-left: 10%;
   }
   
   .hero-title {
-    font-size: 3.5rem;
+    font-size: 4rem;
     font-weight: 800;
     margin-bottom: 1.5rem;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.6);
+    line-height: 1.1;
   }
   
   .hero-subtitle {
     font-size: 1.5rem;
     margin-bottom: 2.5rem;
     font-weight: 300;
+    line-height: 1.6;
+  }
+  
+  .highlight {
+    color: var(--secondary);
+    font-weight: 600;
   }
   
   /* Button styling */
   .btn-primary {
     background: var(--primary);
     border: none;
-    padding: 12px 30px;
+    padding: 14px 35px;
     font-weight: 600;
     border-radius: 8px;
     transition: all 0.3s ease;
+    font-size: 1.1rem;
+    margin-right: 15px;
+    margin-bottom: 10px;
   }
   
   .btn-primary:hover {
     background: var(--primary-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.2);
   }
   
   .btn-outline-light {
     border: 2px solid white;
     color: white;
-    padding: 10px 28px;
+    padding: 12px 32px;
     font-weight: 600;
     border-radius: 8px;
     transition: all 0.3s ease;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
   }
   
   .btn-outline-light:hover {
     background: white;
     color: var(--dark);
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+  }
+  
+  /* Floating elements */
+  .floating-card {
+    position: absolute;
+    right: 10%;
+    bottom: 10%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    max-width: 300px;
+    color: var(--dark);
+    z-index: 3;
+  }
+  
+  .floating-card h4 {
+    color: var(--primary);
+    margin-bottom: 15px;
+    font-weight: 700;
+  }
+  
+  .floating-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .floating-card li {
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+  }
+  
+  .floating-card li:last-child {
+    border-bottom: none;
+  }
+  
+  .floating-card li i {
+    color: var(--success);
+    margin-right: 10px;
+    font-weight: bold;
   }
   
   /* Features section */
@@ -106,11 +160,16 @@
     height: 100%;
     text-align: center;
     padding: 30px 20px;
+    position: relative;
   }
   
   .feature-card:hover {
     transform: translateY(-10px);
     box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+  }
+  
+  .feature-card:hover .card-icon {
+    transform: scale(1.1);
   }
   
   .card-icon {
@@ -123,6 +182,7 @@
     background: rgba(13, 110, 253, 0.1);
     border-radius: 50%;
     padding: 15px;
+    transition: all 0.3s ease;
   }
   
   .card-icon img {
@@ -143,15 +203,30 @@
   
   /* Stats section */
   .stats-section {
-    background: var(--primary);
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
     padding: 80px 0;
     border-radius: 12px;
     margin: 5rem 0;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .stats-section:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url("{% static 'images/pattern.png' %}") repeat;
+    opacity: 0.1;
   }
   
   .stat-item {
     text-align: center;
+    position: relative;
+    z-index: 2;
   }
   
   .stat-number {
@@ -165,7 +240,57 @@
     opacity: 0.9;
   }
   
+  /* How it works section */
+  .steps-section {
+    padding: 80px 0;
+    background: var(--light);
+  }
+  
+  .step-item {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .step-number {
+    width: 60px;
+    height: 60px;
+    background: var(--primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 auto 20px;
+  }
+  
+  .step-item h4 {
+    margin-bottom: 15px;
+    color: var(--dark);
+  }
+  
   /* Responsive adjustments */
+  @media (max-width: 992px) {
+    .hero-title {
+      font-size: 3rem;
+    }
+    
+    .floating-card {
+      position: relative;
+      right: auto;
+      bottom: auto;
+      max-width: 100%;
+      margin-top: 30px;
+    }
+    
+    .hero-content {
+      margin-left: 5%;
+      margin-right: 5%;
+      text-align: center;
+    }
+  }
+  
   @media (max-width: 768px) {
     .hero-title {
       font-size: 2.5rem;
@@ -178,14 +303,22 @@
     .stat-number {
       font-size: 2.2rem;
     }
+    
+    .btn-primary, .btn-outline-light {
+      display: block;
+      width: 100%;
+      margin-right: 0;
+      margin-bottom: 15px;
+    }
   }
 </style>
 
-<section class="hero">
+<!-- Full-screen Hero Section -->
+<section class="hero-section">
   <div class="hero-content">
-    <h1 class="hero-title">RoadMech — Onroad Breakdown Assistance</h1>
-    <p class="hero-subtitle">Fast, reliable roadside help — towing, fuel, battery, tire support. Available 24/7 with Cash on Delivery.</p>
-    <div class="d-flex gap-3 justify-content-center flex-wrap">
+    <h1 class="hero-title">Roadside Assistance <span class="highlight">When You Need It Most</span></h1>
+    <p class="hero-subtitle">Fast, reliable roadside help — towing, fuel, battery, tire support. Available 24/7 with Cash on Delivery. Our mechanics reach you in 30 minutes or less.</p>
+    <div class="d-flex flex-wrap">
       {% if user.is_authenticated %}
         <a class="btn btn-primary btn-lg" href="{% url 'choose_vehicle' %}">Request Service Now</a>
       {% else %}
@@ -194,8 +327,51 @@
       {% endif %}
     </div>
   </div>
+  
+  <!-- Floating info card -->
+  <div class="floating-card d-none d-lg-block">
+    <h4>Services We Provide</h4>
+    <ul>
+      <li><i>✓</i> Emergency Towing</li>
+      <li><i>✓</i> Fuel Delivery</li>
+      <li><i>✓</i> Battery Jumpstart</li>
+      <li><i>✓</i> Tire Replacement</li>
+      <li><i>✓</i> Lockout Service</li>
+    </ul>
+  </div>
 </section>
 
+<!-- How It Works Section -->
+<section class="steps-section">
+  <div class="container">
+    <h2 class="section-title">How RoadMech Works</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="step-item">
+          <div class="step-number">1</div>
+          <h4>Request Help</h4>
+          <p>Select your vehicle type and service needed through our simple interface.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-item">
+          <div class="step-number">2</div>
+          <h4>Get Matched</h4>
+          <p>We connect you with the nearest verified mechanic based on your location.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="step-item">
+          <div class="step-number">3</div>
+          <h4>Receive Service</h4>
+          <p>Your mechanic arrives promptly and provides the service you need.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
 <div class="container my-5">
   <h2 class="section-title">Why Choose RoadMech?</h2>
   <div class="row g-4">
@@ -204,7 +380,7 @@
         <div class="card-icon">
           <img src="{% static 'images/quick.png' %}" alt="Quick Service Icon">
         </div>
-        <h3>Quick Requests</h3>
+        <h3>Quick Response</h3>
         <p>Request help in under a minute — choose vehicle, select service, and share your location for immediate assistance.</p>
       </div>
     </div>
@@ -229,6 +405,7 @@
   </div>
 </div>
 
+<!-- Stats Section -->
 <section class="stats-section">
   <div class="container">
     <div class="row">

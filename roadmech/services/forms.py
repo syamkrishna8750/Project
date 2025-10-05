@@ -1,30 +1,34 @@
+# services/forms.py
 from django import forms
-from .models import ServiceRequest
+from .models import ServiceRequest, Feedback
 import datetime
-
-# Generate year choices dynamically
-current_year = datetime.date.today().year
-YEAR_CHOICES = [(year, year) for year in range(1990, current_year + 1)]
 
 class ServiceRequestForm(forms.ModelForm):
     class Meta:
         model = ServiceRequest
         fields = [
+            'service_type',
             'vehicle_brand',
             'vehicle_model',
             'vehicle_year',
             'vehicle_number',
             'owner_name',
             'phone_number',
-            'service_type',
             'location',
+            'latitude',
+            'longitude',
         ]
         widgets = {
-            'vehicle_brand': forms.TextInput(attrs={'placeholder': 'e.g. Toyota'}),
-            'vehicle_model': forms.TextInput(attrs={'placeholder': 'e.g. Corolla'}),
-            'vehicle_year': forms.Select(choices=YEAR_CHOICES),
-            'vehicle_number': forms.TextInput(attrs={'placeholder': 'e.g. KA-05-1234'}),
-            'owner_name': forms.TextInput(attrs={'placeholder': 'Your Full Name'}),
-            'phone_number': forms.TextInput(attrs={'placeholder': 'e.g. +91 9876543210'}),
-            'location': forms.TextInput(attrs={'placeholder': 'e.g. Highway 85 near Exit 12'}),
+            'location': forms.TextInput(attrs={'placeholder': 'Address or description'}),
+            'vehicle_year': forms.Select(choices=[('', 'Year')] + [(y, y) for y in range(1980, datetime.date.today().year + 1)]),
+            'latitude': forms.HiddenInput(),
+            'longitude': forms.HiddenInput(),
+        }
+
+class FeedbackForm(forms.ModelForm):
+    class Meta:
+        model = Feedback
+        fields = ['rating', 'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={'rows': 3}),
         }

@@ -4,6 +4,9 @@ from .forms import UserRegistrationForm, MechanicRegistrationForm
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from services.models import ServiceRequest
+from .models import MechanicProfile
+from utils.geocode import geocode_address
+
 
 def register(request):
     if request.method == 'POST':
@@ -16,28 +19,32 @@ def register(request):
         form = UserRegistrationForm()
     return render(request, 'accounts/register.html', {'form': form})
 
+# In your views.py
 def mechanic_register(request):
     if request.method == 'POST':
         form = MechanicRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            service_center_name = form.cleaned_data.get('service_center_name')
-            phone = form.cleaned_data.get('phone')
-            location = form.cleaned_data.get('location')  # ✅ use location instead of address
-
-            from .models import MechanicProfile
-            MechanicProfile.objects.create(
+            
+            # Create MechanicProfile with all required fields
+            mp = MechanicProfile.objects.create(
                 user=user,
-                service_center_name=service_center_name,
-                phone=phone,
-                location=location  # ✅ updated
+                service_center_name=form.cleaned_data['service_center_name'],
+                phone=form.cleaned_data['phone'],
+                location=form.cleaned_data['location'],
+                latitude=form.cleaned_data.get('latitude'),
+                longitude=form.cleaned_data.get('longitude'),
+                approved=False  # Mechanic needs to be approved by admin
             )
-            messages.success(request, "Mechanic account created. You can log in now.")
+            
+            # Login the user or redirect to login page
+            # login(request, user)
+            messages.success(request, 'Mechanic registration successful! Waiting for approval.')
             return redirect('login')
     else:
         form = MechanicRegistrationForm()
+    
     return render(request, 'accounts/mechanic_register.html', {'form': form})
-
 
 @login_required
 def mechanic_dashboard(request):
