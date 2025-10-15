@@ -62,11 +62,10 @@ class ServiceRequest(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.service_type} ({self.vehicle_type})"
 
-
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     mechanic = models.ForeignKey(
-        MechanicProfile,
+        'accounts.MechanicProfile',
         on_delete=models.CASCADE,
         related_name="feedbacks"
     )
@@ -79,4 +78,4 @@ class Feedback(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f"{self.user.username} → {self.mechanic.user.username} ({self.rating}⭐)"
+        return f"{self.user.username} → {self.mechanic.service_center_name} ({self.rating}⭐)"

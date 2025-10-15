@@ -6,6 +6,7 @@ from django.db.models import Avg
 from .forms import ServiceRequestForm, FeedbackForm
 from .models import ServiceRequest, Feedback
 from accounts.models import MechanicProfile
+from geopy.distance import geodesic
 import math
 
 def home(request):
@@ -71,27 +72,48 @@ def request_service(request):
 @login_required
 def nearby_mechanics(request, request_id):
     """Show nearby mechanics for a saved ServiceRequest"""
-    sr = get_object_or_404(ServiceRequest, id=request_id, user=request.user)
+    service_request = get_object_or_404(ServiceRequest, id=request_id, user=request.user)
 
-    if sr.latitude is None or sr.longitude is None:
+    # Check if service request has valid coordinates
+    if service_request.latitude is None or service_request.longitude is None:
         messages.error(request, "Location not set on your request. Please allow geolocation or enter a location.")
         return redirect('request_service')
 
-    # Mechanics must be approved and have coordinates
-    mechanics_qs = MechanicProfile.objects.filter(approved=True).exclude(latitude__isnull=True).exclude(longitude__isnull=True)
-    nearby = []
-    for m in mechanics_qs:
-        if m.latitude is None or m.longitude is None:
-            continue
-        dist = haversine_km(sr.latitude, sr.longitude, m.latitude, m.longitude)
-        if dist is None:
-            continue
-        # keep within a reasonable radius (configurable)
-        if dist <= 50:  # 50 km (change as you want)
-            nearby.append((m, dist))
+    user_location = (service_request.latitude, service_request.longitude)
+    radius_km = 50  # Configurable radius (you can change this as needed)
 
-    nearby.sort(key=lambda x: x[1])
-    return render(request, "services/nearby_mechanics.html", {"sr": sr, "nearby": nearby})
+    # Get approved mechanics with valid coordinates
+    mechanics = MechanicProfile.objects.filter(approved=True).exclude(
+        latitude__isnull=True
+    ).exclude(
+        longitude__isnull=True
+    )
+    
+    nearby_mechanics = []
+
+    for mechanic in mechanics:
+        mechanic_location = (mechanic.latitude, mechanic.longitude)
+        distance = geodesic(user_location, mechanic_location).km
+
+        if distance <= radius_km:
+            # Calculate average rating
+            avg_rating = mechanic.feedbacks.aggregate(Avg('rating'))['rating__avg'] or 0
+            nearby_mechanics.append({
+                'mechanic': mechanic,
+                'distance': round(distance, 2),
+                'avg_rating': round(avg_rating, 1)
+            })
+
+    # Sort by distance (closest first)
+    nearby_mechanics.sort(key=lambda x: x['distance'])
+
+    context = {
+        'service_request': service_request,
+        'nearby_mechanics': nearby_mechanics,
+        'radius_km': radius_km
+    }
+    return render(request, 'services/nearby_mechanics.html', context)
+
 
 @login_required
 def assign_mechanic(request, request_id, mechanic_id):
@@ -130,21 +152,27 @@ def service_success(request):
     return render(request, "services/service_success.html")
 
 @login_required
+@login_required
 def give_feedback(request, mechanic_id):
     mechanic = get_object_or_404(MechanicProfile, id=mechanic_id)
-    if request.method == "POST":
+
+    if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             feedback, created = Feedback.objects.update_or_create(
                 user=request.user,
                 mechanic=mechanic,
-                defaults={'rating': form.cleaned_data['rating'], 'comment': form.cleaned_data.get('comment', '')}
+                defaults=form.cleaned_data
             )
-            messages.success(request, "Thanks for your feedback.")
+            messages.success(request, "Thank you for your feedback!")
             return redirect('mechanic_detail', mechanic_id=mechanic.id)
     else:
         form = FeedbackForm()
-    return render(request, 'services/give_feedback.html', {'form': form, 'mechanic': mechanic})
+
+    return render(request, 'services/give_feedback.html', {
+        'form': form,
+        'mechanic': mechanic
+    })
 
 def mechanic_detail(request, mechanic_id):
     mechanic = get_object_or_404(MechanicProfile, id=mechanic_id)
@@ -183,3 +211,5 @@ def search_mechanics(request):
         "radius": radius_km,
         "mechanics": mechanics_list,
     })
+
+mechanics = MechanicProfile.objects.filter(approved=True).annotate(avg_rating=Avg('feedbacks__rating'))

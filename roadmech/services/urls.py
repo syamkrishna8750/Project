@@ -13,5 +13,7 @@ urlpatterns = [
     path('mechanic/<int:mechanic_id>/', views.mechanic_detail, name='mechanic_detail'),
     path('search/', views.search_mechanics, name='search_mechanics'),
     path('feedback/<int:mechanic_id>/', views.give_feedback, name='give_feedback'),
+    path('mechanic/<int:mechanic_id>/feedback/', views.give_feedback, name='give_feedback'),
+
 ]
 

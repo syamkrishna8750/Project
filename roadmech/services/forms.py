@@ -25,10 +25,13 @@ class ServiceRequestForm(forms.ModelForm):
             'longitude': forms.HiddenInput(),
         }
 
+
+
 class FeedbackForm(forms.ModelForm):
     class Meta:
         model = Feedback
         fields = ['rating', 'comment']
         widgets = {
-            'comment': forms.Textarea(attrs={'rows': 3}),
+            'rating': forms.NumberInput(attrs={'min': 1, 'max': 5, 'class': 'form-control'}),
+            'comment': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }

@@ -4,41 +4,43 @@
     <div class="hero-section mb-5">
         <div class="text-center">
             <h2 class="display-5 fw-bold text-gradient mb-3">Nearby Service Centers</h2>
-            <p class="lead subtitle">Select a service center for your <span class="highlight-text">{{ sr.get_vehicle_type_display }} - {{ sr.get_service_type_display }}</span> service</p>
+            <p class="lead subtitle">Select a service center for your <span class="highlight-text">{{ service_request.get_vehicle_type_display }} - {{ service_request.get_service_type_display }}</span> service</p>
         </div>
     </div>
     
-    {% if nearby %}
+    {% if nearby_mechanics %}
         <div class="stats-bar mb-4">
             <div class="stat-item">
-                <span class="stat-number">{{ nearby|length }}</span>
+                <span class="stat-number">{{ nearby_mechanics|length }}</span>
                 <span class="stat-label">Centers Found</span>
             </div>
             <div class="stat-item">
-                <span class="stat-number">{{ nearest_distance|floatformat:2 }}km</span>
+                <span class="stat-number">{{ nearby_mechanics.0.distance }}km</span>
                 <span class="stat-label">Nearest</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">{{ radius_km }}km</span>
+                <span class="stat-label">Search Radius</span>
             </div>
         </div>
 
         <div class="service-centers-grid">
-            {% for mechanic, distance in nearby %}
-            <div class="service-card" data-distance="{{ distance|floatformat:2 }}">
+            {% for item in nearby_mechanics %}
+            <div class="service-card" data-distance="{{ item.distance }}">
                 <div class="card-header">
                     <div class="center-name">
-                        <h3>{{ mechanic.service_center_name }}</h3>
-                        <span class="distance-badge">{{ distance|floatformat:2 }} km</span>
+                        <h3>{{ item.mechanic.service_center_name }}</h3>
+                        <span class="distance-badge">{{ item.distance }} km</span>
                     </div>
                     <div class="rating-stars">
-                        {% with avg_rating=mechanic.average_rating|default:0 %}
-                            {% for i in "12345" %}
-                                {% if forloop.counter <= avg_rating %}
-                                    <i class="fas fa-star filled"></i>
-                                {% else %}
-                                    <i class="fas fa-star"></i>
-                                {% endif %}
-                            {% endfor %}
-                            <span class="rating-text">({{ mechanic.feedbacks.count }})</span>
-                        {% endwith %}
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= item.avg_rating %}
+                                <i class="fas fa-star filled"></i>
+                            {% else %}
+                                <i class="fas fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="rating-text">({{ item.avg_rating }}/5)</span>
                     </div>
                 </div>
 
@@ -47,7 +49,7 @@
                         <i class="fas fa-map-marker-alt pulse"></i>
                         <div>
                             <strong>Location</strong>
-                            <p>{{ mechanic.location }}</p>
+                            <p>{{ item.mechanic.location }}</p>
                         </div>
                     </div>
                     
@@ -55,28 +57,30 @@
                         <i class="fas fa-phone flip"></i>
                         <div>
                             <strong>Contact</strong>
-                            <p>{{ mechanic.phone }}</p>
+                            <p>{{ item.mechanic.phone }}</p>
                         </div>
                     </div>
 
-                    {% if mechanic.specialization %}
+                    {% if item.mechanic.specialization %}
                     <div class="specialization">
                         <i class="fas fa-tools"></i>
-                        <span>Specializes in: {{ mechanic.specialization }}</span>
+                        <span>Specializes in: {{ item.mechanic.specialization }}</span>
                     </div>
                     {% endif %}
                 </div>
 
                 <div class="card-footer">
                     <div class="action-buttons">
-                        <a href="{% url 'assign_mechanic' sr.id mechanic.id %}" class="btn-select">
+                        <a href="{% url 'assign_mechanic' service_request.id item.mechanic.id %}" class="btn-select">
                             <i class="fas fa-check-circle"></i>
                             Select Center
                         </a>
-                        <a href="{% url 'mechanic_detail' mechanic.id %}" class="btn-details">
+                        {% if 'mechanic_detail' in view.urls %}
+                        <a href="{% url 'mechanic_detail' item.mechanic.id %}" class="btn-details">
                             <i class="fas fa-info-circle"></i>
                             View Details
                         </a>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -91,12 +95,14 @@
                     <i class="fas fa-map-marker-alt-slash"></i>
                 </div>
                 <h3>No Service Centers Nearby</h3>
-                <p>We couldn't find any service centers in your immediate area. Try expanding your search radius or search manually.</p>
+                <p>We couldn't find any service centers within {{ radius_km }}km of your location. Try expanding your search radius or search manually.</p>
                 <div class="empty-actions">
+                    {% if 'search_mechanics' in view.urls %}
                     <a href="{% url 'search_mechanics' %}" class="btn-primary">
                         <i class="fas fa-search"></i>
                         Search Manually
                     </a>
+                    {% endif %}
                     <a href="{% url 'user_dashboard' %}" class="btn-secondary">
                         <i class="fas fa-arrow-left"></i>
                         Back to Dashboard
