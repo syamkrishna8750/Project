@@ -237,7 +237,7 @@ def give_feedback(request, request_id=None, mechanic_id=None):
                 if service_request:
                     return redirect('my_requests')
                 else:
-                    return redirect('search_mechanics')  # or wherever makes sense
+                    return redirect('search_mechanics')  
 
         return render(request, 'services/give_feedback.html', {
             'mechanic': mechanic,
@@ -378,10 +378,11 @@ def mechanic_dashboard(request):
         mechanic = MechanicProfile.objects.get(user=request.user)
         requests = ServiceRequest.objects.filter(mechanic=mechanic)
         
-        # Separate requests by status
+        # Separate requests by status (including cancelled)
         pending_requests = requests.filter(status='Pending')
         accepted_requests = requests.filter(status='Accepted')
         completed_requests = requests.filter(status='Completed')
+        cancelled_requests = requests.filter(status='Cancelled')  # Add cancelled requests
         
         # Calculate average rating
         from django.db.models import Avg
@@ -394,6 +395,7 @@ def mechanic_dashboard(request):
             'pending_requests': pending_requests,
             'my_accepted': accepted_requests,
             'completed_requests': completed_requests,
+            'cancelled_requests': cancelled_requests,  # Add to context
             'average_rating': round(average_rating, 1),
         }
         return render(request, 'services/mechanic_dashboard.html', context)
@@ -401,7 +403,7 @@ def mechanic_dashboard(request):
     except MechanicProfile.DoesNotExist:
         messages.error(request, 'You are not registered as a mechanic.')
         return redirect('home')
-
+    
 @login_required
 def create_service_request(request):
     if request.method == 'POST':
@@ -418,3 +420,17 @@ def create_service_request(request):
         form = ServiceRequestForm()
     
     return render(request, 'services/create_request.html', {'form': form})    
+
+@login_required
+def cancel_request(request, request_id):
+    service_request = get_object_or_404(ServiceRequest, id=request_id, user=request.user)
+    
+    # Check if the request can be cancelled (only Pending)
+    if service_request.status == 'Pending':
+        service_request.status = 'Cancelled'
+        service_request.save()
+        messages.success(request, 'Service request has been cancelled successfully.')
+    else:
+        messages.error(request, 'Only pending requests can be cancelled.')
+    
+    return redirect('request_service')

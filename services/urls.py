@@ -17,7 +17,8 @@ urlpatterns = [
     path('service-history/', views.service_history, name='service_history'),
     path('mechanic/dashboard/', views.mechanic_dashboard, name='mechanic_dashboard'),
     path('update-status/<int:request_id>/', views.update_request_status, name='update_request_status'),
-    path('complete/<int:request_id>/', views.complete_request, name='complete_request'),
+    path('complete/<int:request_id>/', views.complete_request, name='complete_request'), 
+    path('cancel-request/<int:request_id>/', views.cancel_request, name='cancel_request'),
 
     
 ]

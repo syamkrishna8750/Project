@@ -22,6 +22,7 @@ class ServiceRequest(models.Model):
         ('Accepted', 'Accepted'),
         ('Rejected', 'Rejected'),
         ('Completed', 'Completed'),
+        ('Cancelled', 'Cancelled'),
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     # Use string reference to avoid circular imports
@@ -71,7 +72,18 @@ class ServiceRequest(models.Model):
         # Use the correct approach - query the Feedback model
         from .models import Feedback  # Import here to avoid circular imports
         return Feedback.objects.filter(service_request=self).exists()
-
+    
+    def can_cancel(self):
+        """Check if the request can be cancelled - only Pending status"""
+        return self.status == 'Pending'
+    
+    def cancel(self):
+        """Cancel the service request if it's in Pending status"""
+        if self.status == 'Pending':
+            self.status = 'Cancelled'
+            self.save()
+            return True
+        return False
 
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)

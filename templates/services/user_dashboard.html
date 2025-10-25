@@ -4,6 +4,7 @@
 :root {
     --primary-color: #2563eb;
     --primary-dark: #1d4ed8;
+    --primary-light: #dbeafe;
     --secondary-color: #64748b;
     --success-color: #10b981;
     --warning-color: #f59e0b;
@@ -14,58 +15,104 @@
     --text-primary: #1e293b;
     --text-secondary: #475569;
     --text-muted: #94a3b8;
-    --border-radius: 12px;
+    --border-radius: 16px;
     --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
     --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
 }
 
-.container.py-5 {
+.dashboard-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
     min-height: 100vh;
-    padding: 2rem 1rem;
 }
 
-/* Header Styles */
-.page-header {
-    background: var(--card-bg);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-md);
-    margin-bottom: 2rem;
-    border-left: 4px solid var(--primary-color);
+/* Header Section */
+.dashboard-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 30px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
 }
 
-.page-title {
-    color: var(--text-primary);
-    font-weight: 700;
-    font-size: 2rem;
+.dashboard-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 200%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg);
+}
+
+.dashboard-header h2 {
     margin: 0;
+    font-weight: 800;
+    font-size: 2.5rem;
+    position: relative;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.dashboard-header p {
+    margin: 15px 0 0;
+    opacity: 0.95;
+    font-size: 1.1rem;
+    position: relative;
+    font-weight: 500;
+}
+
+/* Stats Grid - Hidden */
+.stats-grid {
+    display: none;
+}
+
+/* Section Headers */
+.section-title {
+    position: relative;
+    padding: 20px 0;
+    margin: 40px 0 25px;
+    font-weight: 700;
+    color: var(--text-primary);
+    font-size: 1.5rem;
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 12px;
 }
 
-.page-title::before {
-    content: "🚗";
+.section-title::after {
+    content: '';
+    flex: 1;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+    margin-left: 20px;
+    border-radius: 3px;
+}
+
+.section-title i {
     font-size: 1.8rem;
 }
 
-/* Request List Styles */
-.requests-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* Request Cards */
+.requests-grid {
+    display: grid;
+    gap: 20px;
 }
 
 .request-card {
-    background: var(--card-bg);
+    background: white;
     border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: var(--shadow-sm);
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border: 1px solid #e2e8f0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
@@ -75,30 +122,78 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
-    background: var(--primary-color);
-    transition: all 0.3s ease;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
 }
 
 .request-card:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    border-color: #cbd5e1;
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-xl);
 }
 
-.request-card:hover::before {
-    width: 6px;
-    background: var(--primary-dark);
+/* Status Badges */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: var(--shadow-sm);
 }
 
-/* Card Header */
+.status-pending {
+    background: linear-gradient(135deg, #fef3c7, #f59e0b);
+    color: #92400e;
+}
+
+.status-accepted {
+    background: linear-gradient(135deg, #dbeafe, #2563eb);
+    color: #1e40af;
+}
+
+.status-completed {
+    background: linear-gradient(135deg, #d1fae5, #10b981);
+    color: #065f46;
+}
+
+.status-cancelled {
+    background: linear-gradient(135deg, #fee2e2, #ef4444);
+    color: #991b1b;
+}
+
+/* Service Type Badges */
+.service-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+}
+
+.service-towing { background: #fef3c7; color: #92400e; }
+.service-fuel { background: #d1fae5; color: #065f46; }
+.service-battery { background: #dbeafe; color: #1e40af; }
+.service-tire { background: #f3e8ff; color: #6b21a8; }
+.service-other { background: #fef3c7; color: #92400e; }
+
+/* Card Content */
 .card-header {
     display: flex;
-    justify-content: between;
+    justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 1rem;
-    gap: 1rem;
+    margin-bottom: 20px;
+    gap: 20px;
 }
 
 .service-info {
@@ -107,103 +202,96 @@
 
 .service-type {
     color: var(--text-primary);
-    font-weight: 600;
-    font-size: 1.25rem;
-    margin: 0 0 0.25rem 0;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 0 0 8px 0;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 10px;
 }
 
 .vehicle-type {
     color: var(--text-secondary);
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 
 .request-date {
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     font-weight: 500;
     white-space: nowrap;
 }
 
-/* Card Content */
+/* Card Content Grid */
 .card-content {
     display: grid;
-    gap: 0.75rem;
-    margin-bottom: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .info-row {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 12px;
     color: var(--text-secondary);
 }
 
 .info-icon {
-    width: 16px;
+    width: 20px;
     text-align: center;
     color: var(--primary-color);
+    font-size: 1.1rem;
 }
 
 .info-label {
     font-weight: 600;
     color: var(--text-primary);
-    min-width: 80px;
+    min-width: 100px;
+    font-size: 0.9rem;
 }
 
 .info-value {
     color: var(--text-secondary);
+    font-size: 0.9rem;
 }
 
-/* Status Section */
-.status-section {
+/* Action Section */
+.action-section {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-    padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
-}
-
-.status-badge {
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: var(--shadow-sm);
-}
-
-.status-completed {
-    background: linear-gradient(135deg, var(--success-color), #059669);
-    color: white;
-}
-
-.status-pending {
-    background: linear-gradient(135deg, var(--warning-color), #d97706);
-    color: white;
-}
-
-.status-cancelled {
-    background: linear-gradient(135deg, var(--danger-color), #dc2626);
-    color: white;
-}
-
-.status-assigned {
-    background: linear-gradient(135deg, var(--info-color), #0891b2);
-    color: white;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+    margin-top: 20px;
 }
 
 .mechanic-info {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 12px;
     color: var(--text-secondary);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
+}
+
+.mechanic-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
 }
 
 .mechanic-name {
@@ -211,31 +299,77 @@
     color: var(--text-primary);
 }
 
+/* Action Buttons */
+.action-buttons {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: var(--shadow-md);
+}
+
+.btn-danger {
+    background: linear-gradient(135deg, var(--danger-color), #dc2626);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #b91c1c);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, var(--secondary-color), #475569);
+    color: white;
+    cursor: not-allowed;
+}
+
+.btn-secondary:hover {
+    transform: none;
+    box-shadow: var(--shadow-md);
+}
+
 /* Feedback Section */
 .feedback-section {
-    margin-top: 1rem;
-    padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
 }
 
 .feedback-btn {
     background: linear-gradient(135deg, var(--warning-color), #eab308);
     color: white;
     border: none;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    padding: 12px 24px;
+    border-radius: 10px;
     font-weight: 600;
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     text-decoration: none;
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-md);
 }
 
 .feedback-btn:hover {
-    transform: translateY(-1px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-lg);
     color: white;
     text-decoration: none;
@@ -244,63 +378,71 @@
 
 .feedback-given {
     color: var(--success-color);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
     font-weight: 600;
 }
 
 .feedback-unavailable {
     color: var(--text-muted);
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 8px;
 }
 
 /* Empty State */
 .empty-state {
     text-align: center;
-    padding: 3rem 2rem;
-    background: var(--card-bg);
+    padding: 80px 40px;
+    background: white;
     border-radius: var(--border-radius);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
+    color: var(--text-secondary);
 }
 
 .empty-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    opacity: 0.5;
+    font-size: 5rem;
+    margin-bottom: 25px;
+    opacity: 0.7;
 }
 
 .empty-title {
     color: var(--text-primary);
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-weight: 600;
+    font-size: 1.8rem;
+    margin-bottom: 15px;
+    font-weight: 700;
 }
 
 .empty-description {
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: 30px;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .cta-button {
     background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
     color: white;
-    padding: 0.75rem 2rem;
-    border-radius: 8px;
+    padding: 15px 35px;
+    border-radius: 12px;
     text-decoration: none;
     font-weight: 600;
-    display: inline-block;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
     transition: all 0.3s ease;
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
 }
 
 .cta-button:hover {
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-xl);
     color: white;
     text-decoration: none;
 }
@@ -309,7 +451,7 @@
 @keyframes fadeInUp {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(30px);
     }
     to {
         opacity: 1;
@@ -318,51 +460,57 @@
 }
 
 .request-card {
-    animation: fadeInUp 0.5s ease forwards;
+    animation: fadeInUp 0.6s ease forwards;
 }
 
 .request-card:nth-child(1) { animation-delay: 0.1s; }
 .request-card:nth-child(2) { animation-delay: 0.2s; }
 .request-card:nth-child(3) { animation-delay: 0.3s; }
 .request-card:nth-child(4) { animation-delay: 0.4s; }
-.request-card:nth-child(5) { animation-delay: 0.5s; }
 
 /* Responsive Design */
+@media (max-width: 1024px) {
+    .card-content {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 768px) {
-    .container.py-5 {
-        padding: 1rem 0.5rem;
+    .dashboard-container {
+        padding: 15px;
     }
     
-    .page-header {
-        padding: 1.5rem;
+    .dashboard-header {
+        padding: 30px 20px;
     }
     
-    .page-title {
-        font-size: 1.5rem;
+    .dashboard-header h2 {
+        font-size: 2rem;
     }
     
     .request-card {
-        padding: 1.25rem;
+        padding: 25px;
     }
     
     .card-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.5rem;
+        gap: 15px;
     }
     
-    .request-date {
-        align-self: flex-start;
-    }
-    
-    .status-section {
+    .action-section {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.75rem;
+        gap: 20px;
+    }
+    
+    .action-buttons {
+        width: 100%;
+        justify-content: flex-start;
     }
     
     .empty-state {
-        padding: 2rem 1rem;
+        padding: 60px 20px;
     }
 }
 
@@ -370,121 +518,378 @@
     .info-row {
         flex-direction: column;
         align-items: flex-start;
-        gap: 0.25rem;
+        gap: 5px;
     }
     
     .info-label {
         min-width: auto;
     }
+    
+    .action-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .btn {
+        justify-content: center;
+    }
 }
-
-/* Utility Classes */
-.text-center { text-align: center; }
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-3 { margin-bottom: 1rem; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-3 { margin-top: 1rem; }
 </style>
 
-<div class="container py-5">
-    <div class="page-header">
-        <h1 class="page-title">My Requests</h1>
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-header">
+        <h2>🚗 My Service Dashboard</h2>
+        <p>Welcome back! Here's an overview of your vehicle service requests</p>
     </div>
 
     {% if requests %}
-        <div class="requests-list">
-            {% for r in requests %}
-                <div class="request-card">
-                    <div class="card-header">
-                        <div class="service-info">
-                            <h3 class="service-type">
-                                {{ r.get_service_type_display }}
-                                <span class="vehicle-type">({{ r.get_vehicle_type_display }})</span>
-                            </h3>
+        <!-- Pending Requests Section -->
+        {% regroup requests by status as status_groups %}
+        {% for group in status_groups %}
+            {% if group.grouper == "Pending" %}
+            <div class="active-section">
+                <h3 class="section-title">
+                    <span style="color: var(--warning-color);">⏳</span> PENDING REQUESTS
+                </h3>
+                
+                <div class="requests-grid">
+                    {% for r in group.list %}
+                    <div class="request-card">
+                        <div class="card-header">
+                            <div class="service-info">
+                                <h3 class="service-type">
+                                    {{ r.get_service_type_display }}
+                                    <span class="vehicle-type">({{ r.get_vehicle_type_display }})</span>
+                                </h3>
+                                <span class="status-badge status-pending">
+                                    ⏳ {{ r.status }}
+                                </span>
+                            </div>
+                            <div class="request-date">
+                                {{ r.created_at|date:"M j, Y · g:i A" }}
+                            </div>
                         </div>
-                        <div class="request-date">
-                            {{ r.created_at|date:"M j, Y · g:i A" }}
-                        </div>
-                    </div>
 
-                    <div class="card-content">
-                        <div class="info-row">
-                            <span class="info-icon">🚘</span>
-                            <span class="info-label">Vehicle:</span>
-                            <span class="info-value">
-                                {% if r.vehicle_brand %}{{ r.vehicle_brand }}{% endif %}
-                                {% if r.vehicle_model %}{{ r.vehicle_model }}{% endif %}
-                                {% if r.vehicle_number %}({{ r.vehicle_number }}){% endif %}
-                                {% if r.phone_number %} · {{ r.phone_number }}{% endif %}
-                            </span>
+                        <div class="card-content">
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">🚘</span>
+                                    <span class="info-label">Vehicle:</span>
+                                    <span class="info-value">
+                                        {% if r.vehicle_brand %}{{ r.vehicle_brand }}{% endif %}
+                                        {% if r.vehicle_model %}{{ r.vehicle_model }}{% endif %}
+                                        {% if r.vehicle_number %}({{ r.vehicle_number }}){% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">📍</span>
+                                    <span class="info-label">Location:</span>
+                                    <span class="info-value">{{ r.location }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">📞</span>
+                                    <span class="info-label">Contact:</span>
+                                    <span class="info-value">{{ r.phone_number }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">👤</span>
+                                    <span class="info-label">Owner:</span>
+                                    <span class="info-value">{{ r.owner_name }}</span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="info-row">
-                            <span class="info-icon">📍</span>
-                            <span class="info-label">Location:</span>
-                            <span class="info-value">{{ r.location }}</span>
-                        </div>
-                    </div>
 
-                    <div class="status-section">
-                        <span class="status-badge 
-                            {% if r.status == 'Completed' %}status-completed
-                            {% elif r.status == 'Pending' %}status-pending
-                            {% elif r.status == 'Cancelled' %}status-cancelled
-                            {% else %}status-assigned{% endif %}">
-                            {{ r.status }}
-                        </span>
-                        
-                        {% if r.mechanic %}
+                        <div class="action-section">
                             <div class="mechanic-info">
-                                <span class="info-icon">👨‍🔧</span>
-                                <span>Mechanic:</span>
-                                <span class="mechanic-name">{{ r.mechanic.service_center_name }}</span>
+                                {% if r.mechanic %}
+                                    <div class="mechanic-avatar">{{ r.mechanic.service_center_name|first|upper }}</div>
+                                    <div>
+                                        <div class="mechanic-name">{{ r.mechanic.service_center_name }}</div>
+                                        <small>Assigned Mechanic</small>
+                                    </div>
+                                {% else %}
+                                    <div class="mechanic-avatar">⏳</div>
+                                    <div>
+                                        <div class="mechanic-name">Waiting for assignment</div>
+                                        <small>We're finding the best mechanic for you</small>
+                                    </div>
+                                {% endif %}
                             </div>
-                        {% else %}
-                            <div class="mechanic-info">
-                                <span class="info-icon">⏳</span>
-                                <span>Waiting for mechanic assignment</span>
-                            </div>
-                        {% endif %}
-                    </div>
 
-                    <!-- SINGLE Feedback Section -->
-                    <div class="feedback-section">
-                        {% if r.can_give_feedback %}
-                            <a href="{% url 'give_feedback' r.id %}" class="feedback-btn">
-                                ⭐ Give Feedback
-                            </a>
-                        {% elif r.feedback_exists %}
-                            <div class="feedback-given">
-                                ✅ You've already submitted feedback for this service
+                            <div class="action-buttons">
+                                <a href="{% url 'cancel_request' r.id %}" 
+                                   class="btn btn-danger"
+                                   onclick="return confirm('Are you sure you want to cancel this request?');">
+                                   ❌ Cancel Request
+                                </a>
                             </div>
-                        {% elif not r.mechanic %}
-                            <div class="feedback-unavailable">
-                                ⏳ Waiting for mechanic assignment
-                            </div>
-                        {% else %}
-                            <div class="feedback-unavailable">
-                                ℹ️ Cannot give feedback at this time
-                            </div>
-                        {% endif %}
+                        </div>
                     </div>
+                    {% endfor %}
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Active/Accepted Requests Section -->
+        {% regroup requests by status as status_groups %}
+        {% for group in status_groups %}
+            {% if group.grouper == "Accepted" or group.grouper == "In Progress" %}
+            <div class="active-section">
+                <h3 class="section-title">
+                    <span style="color: var(--info-color);">🛠️</span> ACTIVE SERVICES
+                </h3>
+                
+                <div class="requests-grid">
+                    {% for r in group.list %}
+                    <div class="request-card">
+                        <div class="card-header">
+                            <div class="service-info">
+                                <h3 class="service-type">
+                                    {{ r.get_service_type_display }}
+                                    <span class="vehicle-type">({{ r.get_vehicle_type_display }})</span>
+                                </h3>
+                                <span class="status-badge status-accepted">
+                                    🛠️ {{ r.status }}
+                                </span>
+                            </div>
+                            <div class="request-date">
+                                {{ r.created_at|date:"M j, Y · g:i A" }}
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">🚘</span>
+                                    <span class="info-label">Vehicle:</span>
+                                    <span class="info-value">
+                                        {% if r.vehicle_brand %}{{ r.vehicle_brand }}{% endif %}
+                                        {% if r.vehicle_model %}{{ r.vehicle_model }}{% endif %}
+                                        {% if r.vehicle_number %}({{ r.vehicle_number }}){% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">📍</span>
+                                    <span class="info-label">Location:</span>
+                                    <span class="info-value">{{ r.location }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">📞</span>
+                                    <span class="info-label">Contact:</span>
+                                    <span class="info-value">{{ r.phone_number }}</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">👤</span>
+                                    <span class="info-label">Owner:</span>
+                                    <span class="info-value">{{ r.owner_name }}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="action-section">
+                            <div class="mechanic-info">
+                                {% if r.mechanic %}
+                                    <div class="mechanic-avatar">{{ r.mechanic.service_center_name|first|upper }}</div>
+                                    <div>
+                                        <div class="mechanic-name">{{ r.mechanic.service_center_name }}</div>
+                                        <small>Assigned Mechanic</small>
+                                    </div>
+                                {% else %}
+                                    <div class="mechanic-avatar">⏳</div>
+                                    <div>
+                                        <div class="mechanic-name">Mechanic Assignment Pending</div>
+                                        <small>Will be assigned shortly</small>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="action-buttons">
+                                <button class="btn btn-secondary" disabled>Service In Progress</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Completed Requests Section -->
+        {% regroup requests by status as status_groups %}
+        {% for group in status_groups %}
+            {% if group.grouper == "Completed" %}
+            <div class="history-section">
+                <h3 class="section-title">
+                    <span style="color: var(--success-color);">✅</span> COMPLETED
+                </h3>
+                
+                <div class="requests-grid">
+                    {% for r in group.list %}
+                    <div class="request-card">
+                        <div class="card-header">
+                            <div class="service-info">
+                                <h3 class="service-type">
+                                    {{ r.get_service_type_display }}
+                                    <span class="vehicle-type">({{ r.get_vehicle_type_display }})</span>
+                                </h3>
+                                <span class="status-badge status-completed">
+                                    ✅ {{ r.status }}
+                                </span>
+                            </div>
+                            <div class="request-date">
+                                Completed on {{ r.updated_at|date:"M j, Y" }}
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">🚘</span>
+                                    <span class="info-label">Vehicle:</span>
+                                    <span class="info-value">
+                                        {% if r.vehicle_brand %}{{ r.vehicle_brand }}{% endif %}
+                                        {% if r.vehicle_model %}{{ r.vehicle_model }}{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">🕒</span>
+                                    <span class="info-label">Completed:</span>
+                                    <span class="info-value">{{ r.updated_at|date:"M j, Y · g:i A" }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">👤</span>
+                                    <span class="info-label">Mechanic:</span>
+                                    <span class="info-value">
+                                        {% if r.mechanic %}
+                                            {{ r.mechanic.service_center_name }}
+                                        {% else %}
+                                            Not assigned
+                                        {% endif %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {% if r.can_give_feedback %}
+                        <div class="feedback-section">
+                            <a href="{% url 'give_feedback' r.id %}" class="feedback-btn">
+                                ⭐ Rate This Service
+                            </a>
+                        </div>
+                        {% elif r.feedback_exists %}
+                        <div class="feedback-section">
+                            <div class="feedback-given">
+                                ✅ Thank you for your feedback!
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
+
+        <!-- Cancelled Requests Section -->
+        {% regroup requests by status as status_groups %}
+        {% for group in status_groups %}
+            {% if group.grouper == "Cancelled" %}
+            <div class="history-section">
+                <h3 class="section-title">
+                    <span style="color: var(--danger-color);">❌</span> CANCELLED
+                </h3>
+                
+                <div class="requests-grid">
+                    {% for r in group.list %}
+                    <div class="request-card">
+                        <div class="card-header">
+                            <div class="service-info">
+                                <h3 class="service-type">
+                                    {{ r.get_service_type_display }}
+                                    <span class="vehicle-type">({{ r.get_vehicle_type_display }})</span>
+                                </h3>
+                                <span class="status-badge status-cancelled">
+                                    ❌ {{ r.status }}
+                                </span>
+                            </div>
+                            <div class="request-date">
+                                Cancelled on {{ r.updated_at|date:"M j, Y" }}
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <div class="info-group">
+                                <div class="info-row">
+                                    <span class="info-icon">🚘</span>
+                                    <span class="info-label">Vehicle:</span>
+                                    <span class="info-value">
+                                        {% if r.vehicle_brand %}{{ r.vehicle_brand }}{% endif %}
+                                        {% if r.vehicle_model %}{{ r.vehicle_model }}{% endif %}
+                                    </span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-icon">🕒</span>
+                                    <span class="info-label">Cancelled:</span>
+                                    <span class="info-value">{{ r.updated_at|date:"M j, Y · g:i A" }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        {% endfor %}
 
     {% else %}
         <div class="empty-state">
             <div class="empty-icon">🚗</div>
-            <h2 class="empty-title">No Requests Yet</h2>
+            <h2 class="empty-title">No Service Requests Yet</h2>
             <p class="empty-description">
                 You haven't made any service requests yet. Ready to get help with your vehicle?
+                Our trusted mechanics are here to assist you with any roadside emergency.
             </p>
             <a href="{% url 'choose_vehicle' %}" class="cta-button">
-                Request Help Now
+                🚀 Request Help Now
             </a>
         </div>
     {% endif %}
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add smooth animations
+    const cards = document.querySelectorAll('.request-card');
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+        });
+    });
+    
+    // Add confirmation for cancellation
+    const cancelButtons = document.querySelectorAll('.btn-danger');
+    cancelButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            if (!confirm('Are you sure you want to cancel this service request? This action cannot be undone.')) {
+                e.preventDefault();
+            }
+        });
+    });
+});
+</script>
 {% endblock %}
