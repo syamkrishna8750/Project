@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+
+<style>
+  /* Container Styling with background image */
+  .register-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: 
+      linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)),
+      url('/static/image/recovery.jpg') no-repeat center center fixed;
+    background-size: cover;
+    padding: 20px;
+  }
+
+  /* Transparent Glass Card */
+  .register-card {
+    background: rgba(255, 255, 255, 0.15); /* semi-transparent */
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    padding: 35px;
+    width: 100%;
+    max-width: 460px;
+    backdrop-filter: blur(12px); /* glass effect */
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #fff; /* make text white */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+  }
+
+  .register-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 35px rgba(0,0,0,0.45);
+  }
+
+  /* Title */
+  .register-card h4 {
+    font-weight: 700;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+    text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  }
+
+  /* Form Fields */
+  .register-card label {
+    font-weight: 600;
+    color: #eee;
+    margin-bottom: 6px;
+    display: block;
+  }
+
+  .register-card input, 
+  .register-card select, 
+  .register-card textarea {
+    width: 100%;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    padding: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    transition: border 0.3s, box-shadow 0.3s;
+  }
+
+  .register-card input::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  .register-card input:focus,
+  .register-card select:focus,
+  .register-card textarea:focus {
+    border-color: #4facfe;
+    outline: none;
+    box-shadow: 0 0 8px rgba(79, 172, 254, 0.6);
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Submit Button */
+  .btn-register {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #fff;
+    letter-spacing: 0.5px;
+    transition: background 0.3s, transform 0.2s, box-shadow 0.2s;
+  }
+
+  .btn-register:hover {
+    background: linear-gradient(135deg, #00c6fb, #005bea);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+  }
+
+  /* Login Link */
+  .login-link {
+    margin-top: 18px;
+    text-align: center;
+  }
+
+  .login-link a {
+    text-decoration: none;
+    font-weight: 600;
+    color: #4facfe;
+    transition: color 0.3s;
+  }
+
+  .login-link a:hover {
+    color: #00f2fe;
+  }
+
+  .helptext {
+    display: none !important;
+  }
+
+  /* Form Group Styling */
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .text-danger {
+    color: #ff6b6b !important;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: 500;
+  }
+</style>
+
+<div class="register-container">
+  <div class="register-card">
+    <h4>Create an Account</h4>
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <div class="form-group">
+        <label for="id_username">Username:</label>
+        {{ form.username }}
+        {% for error in form.username.errors %}
+          <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_email">Email:</label>
+        {{ form.email }}
+        {% for error in form.email.errors %}
+          <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_password1">Password:</label>
+        {{ form.password1 }}
+        {% for error in form.password1.errors %}
+          <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="form-group">
+        <label for="id_password2">Password confirmation:</label>
+        {{ form.password2 }}
+        {% for error in form.password2.errors %}
+          <p class="text-danger">{{ error }}</p>
+        {% endfor %}
+      </div>
+
+      <button class="btn-register w-100" type="submit">Register</button>
+    </form>
+    <div class="login-link">
+      <a href="{% url 'login' %}">Already have an account? Login</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

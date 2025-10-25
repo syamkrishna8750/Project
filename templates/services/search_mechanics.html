@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mt-4">
+    <h2>Search Results (radius: {{ radius }} km)</h2>
+    {% if mechanics %}
+      <div class="row">
+        {% for mech, dist in mechanics %}
+          <div class="col-md-6">
+            <div class="card my-2">
+              <div class="card-body">
+                <h5>{{ mech.service_center_name }}</h5>
+                <p>📍 {{ mech.location }}<br>📞 {{ mech.phone }}<br>{{ dist|floatformat:2 }} km</p>
+                <a href="{% url 'mechanic_detail' mech.id %}" class="btn btn-outline-secondary btn-sm">View</a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="alert alert-warning">No mechanics found.</div>
+    {% endif %}
+  </div>
+{% endblock %}

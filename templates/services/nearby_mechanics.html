@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Nearby Mechanics Page Styles */
+    .mechanics-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 20px 0;
+    }
+
+    .mechanics-header {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 2rem;
+        margin-bottom: 2rem;
+    }
+
+    .service-info-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        padding: 1.5rem;
+    }
+
+    .mechanic-card {
+        background: white;
+        border-radius: 20px;
+        border: none;
+        box-shadow: 0 5px 25px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+        border-left: 5px solid #667eea;
+    }
+
+    .mechanic-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+
+    .mechanic-card h4, .mechanic-card h5 {
+        color: #2d3748;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .mechanic-card h5 {
+        font-size: 1.3rem;
+    }
+
+    .mechanic-info {
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .mechanic-info strong {
+        color: #2d3748;
+    }
+
+    .distance-badge {
+        background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+    .select-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        padding: 0.8rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        margin-top: 1rem;
+    }
+
+    .select-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+        text-decoration: none;
+    }
+
+    .results-count {
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+        color: #2d3748;
+    }
+
+    .radius-info {
+        color: #667eea;
+        font-weight: 600;
+        font-size: 1.1rem;
+    }
+
+    .no-mechanics-card {
+        background: white;
+        border-radius: 20px;
+        padding: 3rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        border-left: 5px solid #ff6b6b;
+    }
+
+    .no-mechanics-icon {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+        opacity: 0.7;
+    }
+
+    .action-btn {
+        border-radius: 12px;
+        padding: 0.7rem 1.5rem;
+        font-weight: 600;
+        margin: 0.3rem;
+        transition: all 0.3s ease;
+    }
+
+    .specialization-tag {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.3rem 0.8rem;
+        border-radius: 15px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .rating-stars {
+        color: #fbbf24;
+        font-weight: 600;
+    }
+
+    /* New styles for the mechanic cards */
+    .card {
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        overflow: hidden;
+        margin-bottom: 1.5rem;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .card h5 {
+        color: #2d3748;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .btn-success {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        border: none;
+        border-radius: 10px;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-success:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(72, 187, 120, 0.4);
+    }
+
+    /* Animation for cards */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .mechanic-card, .card {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .mechanic-card:nth-child(1), .card:nth-child(1) { animation-delay: 0.1s; }
+    .mechanic-card:nth-child(2), .card:nth-child(2) { animation-delay: 0.2s; }
+    .mechanic-card:nth-child(3), .card:nth-child(3) { animation-delay: 0.3s; }
+    .mechanic-card:nth-child(4), .card:nth-child(4) { animation-delay: 0.4s; }
+</style>
+
+<div class="mechanics-container">
+    <div class="container py-4">
+        <!-- Header Section -->
+        <div class="mechanics-header text-center">
+            <h1 class="display-5 fw-bold mb-3" style="color: #2d3748;">🔧 Nearby Mechanics</h1>
+            <p class="lead mb-4">Choose from available mechanics in your area</p>
+            
+            <!-- Service Request Info -->
+            <div class="service-info-card text-start mx-auto" style="max-width: 600px;">
+                <h5 class="fw-bold mb-3">📋 Your Service Request</h5>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Service:</strong> {{ service_request.service_type }}</p>
+                        <p class="mb-2"><strong>Vehicle:</strong> {{ service_request.vehicle_type }}</p>
+                    </div>
+                    <div class="col-md-6">
+                        <p class="mb-2"><strong>Location:</strong> {{ service_request.location }}</p>
+                        <p class="mb-0"><strong>Status:</strong> <span class="badge bg-warning">{{ service_request.status }}</span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Search Info -->
+        <div class="d-flex justify-content-between align-items-center mb-4 px-3">
+            <p class="radius-info mb-0">
+                🔍 Searching within <strong>{{ radius_km }} km</strong> radius
+            </p>
+            <span class="results-count">
+                📊 {{ nearby_mechanics|length }} mechanics found
+            </span>
+        </div>
+
+        <!-- Mechanics Grid -->
+        {% if nearby_mechanics %}
+            <!-- Original Mechanic Cards -->
+            <div class="row">
+                {% for data in nearby_mechanics %}
+                <div class="col-lg-6 col-xl-4 mb-4">
+                    <div class="mechanic-card h-100 p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-3">
+                            <h4 class="mb-0">{{ data.mechanic.service_center_name }}</h4>
+                            <span class="distance-badge">{{ data.distance }} km</span>
+                        </div>
+                        
+                        <div class="mechanic-details">
+                            <p class="mechanic-info">
+                                <span style="color: #667eea;">📍</span> 
+                                {{ data.mechanic.location }}
+                            </p>
+                            <p class="mechanic-info">
+                                <span style="color: #48bb78;">📞</span> 
+                                {{ data.mechanic.phone }}
+                            </p>
+                            
+                            {% if data.mechanic.specialization %}
+                            <p class="mechanic-info">
+                                <span style="color: #ed8936;">🔧</span> 
+                                <span class="specialization-tag">{{ data.mechanic.specialization }}</span>
+                            </p>
+                            {% endif %}
+                            
+                            <!-- FIXED: Use average_rating method instead of rating field -->
+                            <p class="mechanic-info">
+                                <span class="rating-stars">⭐</span> 
+                                Rating: 
+                                {% for i in "12345" %}
+                                    {% if forloop.counter <= data.mechanic.average_rating %}
+                                        <span class="rating-stars">⭐</span>
+                                    {% else %}
+                                        <span style="color: #cbd5e0;">☆</span>
+                                    {% endif %}
+                                {% endfor %}
+                                ({{ data.mechanic.average_rating }})
+                            </p>
+                        </div>
+                        
+                        <a href="{% url 'assign_mechanic' service_request.id data.mechanic.id %}" class="select-btn w-100">
+                            🛠️ Select This Mechanic
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+        {% else %}
+            <!-- No Mechanics Found -->
+            <div class="no-mechanics-card">
+                <div class="no-mechanics-icon">🔧</div>
+                <h3 class="mb-3" style="color: #2d3748;">No Mechanics Available</h3>
+                <p class="text-muted mb-4">
+                    We couldn't find any available mechanics within {{ radius_km }} km of your location.
+                    Please try adjusting your location or try again later.
+                </p>
+                <div class="mt-4">
+                    <a href="{% url 'request_service' %}" class="btn action-btn btn-primary">
+                        📍 Try Different Location
+                    </a>
+                    <a href="{% url 'home' %}" class="btn action-btn btn-outline-secondary">
+                        🏠 Go Home
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
